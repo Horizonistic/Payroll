@@ -13,6 +13,7 @@ public class Payroll
 {
     private SuperOutput so;
     private ObjectList list;
+    private ObjectList sortedList;
 
     public Payroll(SuperOutput so)
     {
@@ -122,36 +123,69 @@ public class Payroll
         this.list.dump();
 
         this.so.println("Number of Employees: ");
-        this.so.println(list.size());
+        this.so.println(this.list.size());
         this.so.println();
 
         this.so.println("First name of all women: ");
-        so.println();
-        employee = new Employee.Builder("", "").gender('F').build();
-        ObjectList tempList = findEmployee(this.list, employee, Employee.Field.GENDER);
-        ObjectListNode temp = tempList.getFirstNode();
-        while (temp != null)
-        {
-            this.printEmployee((Employee) temp.getInfo(), Employee.Field.FIRST_NAME);
-            temp = temp.getNext();
-        }
+        this.so.println();
+        printAllWomen();
+        ObjectList tempList;
+        ObjectListNode temp;
 
         // TODO: Figure out how to calculate yearly salaries gracefully
         this.so.println("Names and salaries of all weekly employees who make >$35k/year and have been employees for 5+ years: ");
-        so.println();
-        employee = new Employee.Builder("", "").rate('W').build();
-        tempList = findEmployee(this.list, employee, Employee.Field.RATE);
-        temp = tempList.getFirstNode();
+        this.so.println();
+        this.printWeeklyVeterans();
+
+
+        // Raise
+        this.so.println("Raise of $0.75 to <$10/hour employees, and raise of $50 to <$350/week employees: ");
+        this.giveRaise();
+
+        // Sorted
+        this.so.println("Here is a first and last name and salary off all employees sorted alphabetically according to last name: ");
+        this.so.println();
+        this.sortAlphabetically();
+
+        // todo: hirefile.txt
+
+        // todo: firefile.txt
+    }
+
+    private void sortAlphabetically()
+    {
+        Employee employee;
+        ObjectListNode temp;
+        employee = (Employee) this.list.removeFirst();
+
+        this.sortedList = new ObjectList(this.so);
+        this.sortedList.addFirst(employee);
+        employee = (Employee) this.list.removeFirst();
+
+        while (!this.list.isEmpty())
+        {
+            this.sortedList.insert(employee);
+            employee = (Employee) this.list.removeFirst();
+        }
+        this.sortedList.insert(employee);
+
+        temp = this.sortedList.getFirstNode();
         while (temp != null)
         {
-            this.printEmployee((Employee) temp.getInfo(), Employee.Field.FIRST_NAME);
+            this.printEmployee((Employee) temp.getInfo(), Employee.Field.FIRST_NAME, Employee.Field.LAST_NAME, Employee.Field.SALARY);
             temp = temp.getNext();
         }
+    }
 
+    private void giveRaise()
+    {
+        Employee employee;
+        ObjectList tempList;
+        ObjectListNode temp;
 
-        this.so.println("Raise of $0.75 to <$10/hour employees, and raise of $50 to <$350/week employees: ");
         this.so.println("Weekly: ");
         this.so.println();
+
         employee = new Employee.Builder("", "").rate('H').salary(10.00).build();
         tempList = findEmployee(this.list, employee, Employee.Field.RATE);
 
@@ -161,8 +195,14 @@ public class Payroll
         {
             if (((Employee) temp.getInfo()).getSalary() < employee.getSalary())
             {
-                ((Employee) temp.getInfo()).setSalary(((Employee) temp.getInfo()).getSalary() + .75);
+                this.so.println("Old: \n");
                 this.printEmployee((Employee) temp.getInfo(), Employee.Field.FIRST_NAME, Employee.Field.LAST_NAME, Employee.Field.SALARY);
+
+                ((Employee) temp.getInfo()).setSalary(((Employee) temp.getInfo()).getSalary() + .75);
+
+                this.so.println("New: \n");
+                this.printEmployee((Employee) temp.getInfo(), Employee.Field.FIRST_NAME, Employee.Field.LAST_NAME, Employee.Field.SALARY);
+
                 tempList2.addLast(new ObjectListNode(temp.getInfo()));
             }
             temp = temp.getNext();
@@ -170,32 +210,63 @@ public class Payroll
 
         this.so.println("Monthly: ");
         this.so.println();
+
         employee = new Employee.Builder("", "").rate('W').salary(350.00).build();
 
-        tempList = findEmployee(this.list, employee, Employee.Field.RATE);temp = tempList.getFirstNode();
+        tempList = findEmployee(this.list, employee, Employee.Field.RATE);
+        temp = tempList.getFirstNode();
         tempList2 = new ObjectList(this.so);
         while (temp != null)
         {
             if (((Employee) temp.getInfo()).getSalary() < employee.getSalary())
             {
+                this.so.println("Old: \n");
                 this.printEmployee((Employee) temp.getInfo(), Employee.Field.FIRST_NAME, Employee.Field.LAST_NAME, Employee.Field.SALARY);
+
                 ((Employee) temp.getInfo()).setSalary(((Employee) temp.getInfo()).getSalary() + 50.0);
+
+                this.so.println("New: \n");
                 this.printEmployee((Employee) temp.getInfo(), Employee.Field.FIRST_NAME, Employee.Field.LAST_NAME, Employee.Field.SALARY);
                 tempList2.addLast(new ObjectListNode(temp.getInfo()));
             }
             temp = temp.getNext();
         }
+    }
 
-        // todo: sort list alphabetically according to last name
+    private void printWeeklyVeterans()
+    {
+        Employee employee;
+        ObjectList tempList;
+        ObjectListNode temp;
 
-        // todo: hirefile.txt
+        employee = new Employee.Builder("", "").rate('W').build();
+        tempList = findEmployee(this.list, employee, Employee.Field.RATE);
+        temp = tempList.getFirstNode();
+        while (temp != null)
+        {
+            this.printEmployee((Employee) temp.getInfo(), Employee.Field.FIRST_NAME);
+            temp = temp.getNext();
+        }
+    }
 
-        // todo: firefile.txt
+    private void printAllWomen()
+    {
+        Employee employee;
+        ObjectList tempList;
+        ObjectListNode temp;
+
+        employee = new Employee.Builder("", "").gender('F').build();
+        tempList = findEmployee(this.list, employee, Employee.Field.GENDER);
+        temp = tempList.getFirstNode();
+        while (temp != null)
+        {
+            this.printEmployee((Employee) temp.getInfo(), Employee.Field.FIRST_NAME);
+            temp = temp.getNext();
+        }
     }
 
     public ObjectList findEmployee(ObjectList list, Employee employee, Employee.Field... fields)
     {
-        // ((Comparable)o).compareTo(p.getInfo())
         if (list.isEmpty())
         {
             return list;

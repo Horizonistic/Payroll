@@ -4,6 +4,53 @@ import utils.SuperOutput;
 
 public class Employee implements Comparable
 {
+    /**
+     *
+     * @param o  the object to be compared.
+     * @return  a negative integer, zero, or a positive integer as this object
+     * is less than, equal to, or greater than the specified object.
+     * @throws NullPointerException  if the specified object is null
+     * @throws ClassCastException  if the specified object's type prevents it
+     *                              from being compared to this object.
+     */
+    @Override
+    public int compareTo(Object o)
+    {
+        if (o == null)
+        {
+            throw new NullPointerException();
+        }
+
+        Employee employee = (Employee) o;
+        int compare = this.lastName.compareToIgnoreCase(employee.getLastName());
+
+        if (compare > 0)
+        {
+            return 1;
+        }
+        else if (compare < 0)
+        {
+            return -1;
+        }
+        else
+        {
+            compare = this.firstName.compareToIgnoreCase(employee.getFirstName());
+
+            if (compare > 0)
+            {
+                return 1;
+            }
+            else if (compare < 0)
+            {
+                return -1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+    }
+
     public enum Field{ALL, FIRST_NAME, LAST_NAME, GENDER, TENURE, RATE, SALARY}
     private String firstName;
     private String lastName;
@@ -13,12 +60,6 @@ public class Employee implements Comparable
     private int tenure;
     private char rate;
     private double salary;
-
-    @Override
-    public int compareTo(Object o)
-    {
-        return 0;
-    }
 
     public static class Builder
     {
