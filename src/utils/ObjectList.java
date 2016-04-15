@@ -294,11 +294,10 @@ public class ObjectList implements ObjectListInterface
         {
             ObjectListNode temp = this.list;
             while (temp != null) {
-                ((Employee) temp.getInfo()).dump();
+                ((Employee) temp.getInfo()).dump(this.so);
                 so.println();
                 temp = temp.getNext();
             }
         }
     }
-    ((Comparable)o).compareTo(p.getInfo())
 }

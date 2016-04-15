@@ -1,9 +1,14 @@
 package main;
 
+import utils.SuperOutput;
+
 public class Employee implements Comparable
 {
+    public enum Field{ALL, FIRST_NAME, LAST_NAME, GENDER, TENURE, RATE, SALARY}
     private String firstName;
     private String lastName;
+
+    // Optional
     private char gender;
     private int tenure;
     private char rate;
@@ -20,6 +25,7 @@ public class Employee implements Comparable
         private final String firstName;
         private final String lastName;
 
+        // Optional
         private char gender = '0';
         private int tenure = 0;
         private char rate = '0';
@@ -68,18 +74,73 @@ public class Employee implements Comparable
         this.salary = builder.salary;
     }
 
-    public Employee compareTo(T)
+    public void setFirstName(String firstName)
     {
-
+        this.firstName = firstName;
     }
 
-    public void dump()
+    public String getFirstName()
     {
-        System.out.println("First name: " + this.firstName);
-        System.out.println("Last name: " + this.lastName);
-        System.out.println("Gender: " + this.gender);
-        System.out.println("Tenure: " + this.tenure);
-        System.out.println("Rate: " + this.rate);
-        System.out.println("Salary: " + this.salary);
+        return this.firstName;
+    }
+
+    public void setLastName(String lastName)
+    {
+        this.lastName = lastName;
+    }
+
+    public String getLastName()
+    {
+        return this.lastName;
+    }
+
+    public void setGender(char gender)
+    {
+        this.gender = gender;
+    }
+
+    public char getGender()
+    {
+        return this.gender;
+    }
+
+    public void setTenure(int tenure)
+    {
+        this.tenure = tenure;
+    }
+
+    public int getTenure()
+    {
+        return tenure;
+    }
+
+    public void setRate(char rate)
+    {
+        this.rate = rate;
+    }
+
+    public char getRate()
+    {
+        return rate;
+    }
+
+    public void setSalary(double salary)
+    {
+        this.salary = salary;
+    }
+
+    public double getSalary()
+    {
+        return salary;
+    }
+
+    public void dump(SuperOutput so)
+    {
+        so.println("First name: " + this.firstName);
+        so.println("Last name: " + this.lastName);
+        so.println("Gender: " + this.gender);
+        so.println("Tenure: " + this.tenure);
+        so.println("Rate: " + this.rate);
+        so.println("Salary: " + this.salary);
     }
 }

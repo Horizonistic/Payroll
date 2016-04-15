@@ -8,6 +8,6 @@ public class Driver
     {
         SuperOutput so = new SuperOutput("csis.txt");
         Payroll pr = new Payroll(so);
-        pr.readFiles();
+        pr.readPayroll();
     }
 }
